@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import  cors from "cors"
 import prisma from "./lib/prisma.js";
+import authRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
+
 
 const app = express()
 dotenv.config()
@@ -41,5 +44,10 @@ app.get("/test-db", async (req, res) => {
     });
   }
 });
+
+
+app.use("/api/auth", authRouter);
+app.use('/api/users',userRouter)
+app.use("/api/users/:id",userRouter)
 
 export default app;

@@ -59,7 +59,7 @@ model Category {
   id        String     @id @default(uuid())
   name      String     @unique
   slug      String     @unique
-  isDeleted Boolean    @default(false)
+  isDelete Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   products  Products[]
@@ -78,7 +78,7 @@ model Products {
   categoryId String
   category   Category      @relation(fields: [categoryId], references: [id])
 
-  isDeleted Boolean  @default(false)
+  isDelete Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   orders    Order[]
@@ -123,7 +123,7 @@ model Review {
   user      User     @relation(fields: [userId], references: [id])
   productId String
   product   Products @relation(fields: [productId], references: [id])
-  isDeleted Boolean  @default(false)
+  isDelete Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
