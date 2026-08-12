@@ -52,7 +52,7 @@ model User {
   reviews   Review[]
   orders    Order[]
 
-  @@map("user")
+  @@map("users")
 }
 
 model Category {
