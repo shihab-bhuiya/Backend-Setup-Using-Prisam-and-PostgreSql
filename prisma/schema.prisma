@@ -11,3 +11,123 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ====================
+// Enum Types
+// ====================
+
+enum UserRole {
+  User
+  Admin
+  Manager
+}
+
+enum ProductStatus {
+  Active
+  Inactive
+  Out_of_Stock
+}
+
+enum OrderStatus {
+  Pending
+  Processing
+  Shipped
+  Delivered
+  Cancelled
+}
+
+// ===============
+// Model Types
+// ===============
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(User)
+  isDelete  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reviews   Review[]
+  orders    Order[]
+
+  @@map("user")
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  slug      String     @unique
+  isDeleted Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  products  Products[]
+
+  @@map("categories")
+}
+
+model Products {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  stock       Int
+
+  status     ProductStatus @default(Active)
+  categoryId String
+  category   Category      @relation(fields: [categoryId], references: [id])
+
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+  reviews   Review[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@map("products")
+}
+
+// =================
+// Order Model
+// =================
+
+model Order {
+  id       String      @id @default(uuid())
+  quantity Int
+  status   OrderStatus @default(Pending)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+
+  @@index([userId])
+  @@index([productId])
+  @@index([status])
+  @@map("orders")
+}
+
+// =================
+// Review Model
+// =================
+
+model Review {
+  id      String  @id @default(uuid())
+  rating  Int
+  comment String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+  @@map("reviews")
+}
