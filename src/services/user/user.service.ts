@@ -5,14 +5,14 @@ const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
       where: {
-        isDelete: false,
+        isDeleted: false,
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        isDelete: true,
+        isDeleted: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -31,14 +31,14 @@ export const getUserById = async (id: string) => {
     const user = await prisma.user.findFirst({
       where: {
         id,
-        isDelete: false,
+        isDeleted: false,
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        isDelete: true,
+        isDeleted: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -68,7 +68,7 @@ export const updateUser = async (
     const existingUser = await prisma.user.findFirst({
       where: {
         id,
-        isDelete: false,
+        isDeleted: false,
       },
     });
 
@@ -89,7 +89,7 @@ export const updateUser = async (
         name: true,
         email: true,
         role: true,
-        isDelete: true,
+        isDeleted: true,
         createdAt: true,
         updatedAt: true,
       },

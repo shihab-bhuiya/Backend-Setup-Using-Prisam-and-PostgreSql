@@ -48,6 +48,6 @@ app.get("/test-db", async (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use('/api/users',userRouter)
-app.use("/api/users/:id",userRouter)
+app.use("/api/users",userRouter)
 
 export default app;
