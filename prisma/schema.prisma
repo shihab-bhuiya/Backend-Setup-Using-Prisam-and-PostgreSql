@@ -106,6 +106,10 @@ model Order {
   productId String
   product   Product @relation(fields: [productId], references: [id])
 
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
   @@index([productId])
   @@index([status])
