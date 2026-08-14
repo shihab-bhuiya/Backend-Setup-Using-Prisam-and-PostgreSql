@@ -1,5 +1,8 @@
 $kind: http-request
 name: New Request
-url: ""
-method: GET
+url: http://localhost:5000/api/categories
+method: POST
 order: 1786503313244
+body:
+  type: json
+  content: "{\r\n  \"name\": \"Electronics\"\r\n}"

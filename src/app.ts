@@ -5,6 +5,7 @@ import prisma from "./lib/prisma.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import categoryRouter from "./routes/category.routes.js";
+import productRouter from "./routes/product.routes.js";
 
 
 const app = express()
@@ -50,6 +51,8 @@ app.get("/test-db", async (req, res) => {
 app.use("/api/auth", authRouter);
 app.use('/api/users',userRouter)
 app.use("/api/users",userRouter)
+
 app.use("/api/categories",categoryRouter);
+app.use("/api/products", productRouter);
 
 export default app;

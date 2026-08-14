@@ -1,15 +1,16 @@
 import { Router } from "express";
-import createCategory, { getAllCategory, getSingleCategory, updateCategory } from "../services/category/category.service.js";
+import createCategory, { deleteCategory, getAllCategory, getSingleCategory, updateCategory } from "../services/category/category.service.js";
 
 
 const categoryRouter = Router();
 
 categoryRouter.post("/",async(req,res)=>{
      try {
-    const { name, description } = req.body;
+    const { name, description , slug} = req.body;
 
     const category = await createCategory(
       name,
+      slug,
       description
     );
 
@@ -96,6 +97,29 @@ categoryRouter.patch("/:id", async (req, res) => {
         error instanceof Error
           ? error.message
           : "Failed to update category",
+    });
+  }
+});
+
+
+categoryRouter.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedCategory = await deleteCategory(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Category deleted successfully",
+      data: deletedCategory,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to delete category",
     });
   }
 });

@@ -1,8 +1,8 @@
-import { error } from "node:console";
+
 import prisma from "../../lib/prisma.js";
 
 
-const createCategory = async(name:string,description?:string)=>{
+const createCategory = async(name:string,slug:string,description?:string)=>{
     try{
         if(!name){
             throw new Error("Name is required");
@@ -21,15 +21,20 @@ const createCategory = async(name:string,description?:string)=>{
         const category = await prisma.category.create({
             data:{
                 name,
-               description
+                slug,
+                description
             },
         });
 
         return category;
     }
 
-    catch{
+    catch(error){
         console.error("Error Creating Category", error);
+        if(error instanceof Error){
+            throw error;
+        }
+        throw new Error("Failed to create category");
     }
 }
 
@@ -84,11 +89,11 @@ export const getSingleCategory = async(id:string)=>{
 
 
 
-export const updateCategory = async(id:string,name:string,description?:string)=>{
+export const updateCategory = async(id:string,name:string,slug:string,description?:string)=>{
     try{
         const category = await prisma.category.update({
             where:{id,isDeleted:false},
-            data:{name,description}
+            data:{name,slug,description}
         });
 
         return category;
@@ -98,6 +103,37 @@ export const updateCategory = async(id:string,name:string,description?:string)=>
     }
 }
 
+// ============================
+// Soft Delete Category
+// ============================
 
+export const deleteCategory = async (id: string) => {
+  try {
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        id,
+        isDeleted: false,
+      },
+    });
+
+    if (!existingCategory) {
+      throw new Error("Category not found");
+    }
+
+    const deletedCategory = await prisma.category.update({
+      where: {
+        id,
+      },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    return deletedCategory;
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    throw error;
+  }
+};
 
 export default createCategory
