@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { Router } from "express";   
+// import { z } from "zod";
 
 import {
   createReview,
@@ -7,6 +8,8 @@ import {
   updateReview,
   deleteReview,
 } from "../services/review/review.service.js";
+import { createReviewSchema, updateReviewSchema } from "../services/review/review.validation.js";
+import validate from "../middleware/validate.js";
 
 const reviewRouter = Router();
 
@@ -15,7 +18,7 @@ const reviewRouter = Router();
 // POST /api/reviews
 // =====================================
 
-reviewRouter.post("/", async (req, res) => {
+reviewRouter.post("/",  validate(createReviewSchema), async (req, res) => {
   try {
     const review = await createReview(req.body);
 
@@ -95,9 +98,9 @@ reviewRouter.get("/:id", async (req, res) => {
 // PATCH /api/reviews/:id
 // =====================================
 
-reviewRouter.patch("/:id", async (req, res) => {
+reviewRouter.patch("/:id", validate(updateReviewSchema), async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
 
     const review = await updateReview(id, req.body);
 
